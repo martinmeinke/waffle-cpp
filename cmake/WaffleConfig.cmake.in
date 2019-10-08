@@ -1,0 +1,8 @@
+get_filename_component(Waffle_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+
+if(NOT TARGET Waffle::Waffle)
+    include("${Waffle_CMAKE_DIR}/WaffleTargets.cmake")
+endif()
+
+set(Waffle_LIBRARIES Waffle::Waffle)

@@ -3,6 +3,8 @@ sudo: false
 language: cpp
 
 script:
-  - cmake .
-  - cmake --build . -- -j2
+  - mkdir build && cd build
+  - cmake ..
+  - make
+  - test/waffle_test
 
