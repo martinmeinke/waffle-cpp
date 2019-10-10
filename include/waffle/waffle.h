@@ -37,23 +37,28 @@ namespace waffle
         std::string name_;
         IteratorT start_; // use lazy range?
         IteratorT end_; // use lazy range?
-        int index_ = 0;
+        IteratorT curr_;
 
-        Parameter(std::string name, IteratorT start, IteratorT end) : name_(name), start_(start), end_(end)
+        Parameter(std::string name, IteratorT start, IteratorT end) : name_(name), start_(start), end_(end), curr_(start)
         {
 
         }
 
+        void inc()
+        {
+            curr_++;
+        }
+
         bool at_end(){
-            return start_ + index_ == end_;
+            return curr_ == end_;
         }
 
         void reset(){
-            index_ = 0;
+            curr_ = start_;
         }
 
         IteratorT get(){
-            return start_ + index_;
+            return curr_;
         }       
     };
 
@@ -70,16 +75,44 @@ namespace waffle
             ObjectiveFctr objective_;
     };*/
 
-    template <typename First, typename... Args>
-    void func(First& f, std::tuple<Args...>& tup)
+    template <typename First>
+    void resetP(First& f)
     {
-        std::cout << "func called" << std::endl;
+        std::cout << "resetP called" << std::endl;
+        f.reset();
     }
 
-    template <typename... Args>
-    void func(std::tuple<Args...>& tup)
+    template <typename First, typename... Rest>
+    void resetP(First& f, Rest&... rest)
     {
-        std::cout << "func called" << std::endl;
+        std::cout << "resetP called with rest" << std::endl;
+        resetP(f);
+        resetP(rest...);
+    }
+
+    template <typename First>
+    bool nextP(First& f)
+    {
+        std::cout << "nextP called" << std::endl;
+        if(!f.at_end())
+        {
+            f.inc();
+            return true;
+        }
+
+        return false;
+    }
+
+    template <typename First, typename... Rest>
+    bool nextP(First& f, Rest&... rest)
+    {
+        std::cout << "nextP called with rest" << std::endl;
+        if(!nextP(rest...)){
+            resetP(rest...);
+            return nextP(f);
+        }else{
+            return nextP(rest...);
+        }
     }
 
 

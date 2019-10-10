@@ -24,7 +24,7 @@ TEST(WaffleTest, waffle)
     std::vector<std::string> p2_vals{"algo1", "balgo"};
     Parameter p2{"algorithm", p2_vals.begin(), p2_vals.end()};
 
-    std::vector<float> p3_vals{0.01, 0.001, 0.0001};
+    std::vector<float> p3_vals{3.3, 4.4};
     Parameter p3{"decay", p3_vals.begin(), p3_vals.end()};
 
     // the variant to visit
@@ -39,6 +39,23 @@ TEST(WaffleTest, waffle)
     GridSearch<ParameterList, Objective> gs{parameter_list, o};*/
     
     Objective o;
+
+    std::cout << "p1: " << *p1.get() << std::endl;
+    std::cout << "p2: " << *p2.get() << std::endl;
+    std::cout << "p3: " << *p3.get() << std::endl;
+
+    nextP(p1, p2, p3);
+
+    std::cout << "p1: " << *p1.get() << std::endl;
+    std::cout << "p2: " << *p2.get() << std::endl;
+    std::cout << "p3: " << *p3.get() << std::endl;
+
+    nextP(p1, p2, p3);
+
+    std::cout << "p1: " << *p1.get() << std::endl;
+    std::cout << "p2: " << *p2.get() << std::endl;
+    std::cout << "p3: " << *p3.get() << std::endl;
+
     GridSearchVariadic gs{o, p1, p2, p3};
     gs.run();
 
