@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(waffle VERSION 1.0.0 LANGUAGES CXX)
+project(waffle VERSION 0.1.0 LANGUAGES CXX)
 
 #Make sure that custom modules like FindRapidJSON are found
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
