@@ -15,7 +15,7 @@ struct Objective{
   }
 };
 
-TEST(WaffleTest, waffle)
+TEST(WaffleTest, basic_usage)
 {
     using namespace waffle;
     std::vector<int> p1_vals{1,2,3};
@@ -27,44 +27,22 @@ TEST(WaffleTest, waffle)
     std::vector<float> p3_vals{3.3, 4.4};
     Parameter p3{"decay", p3_vals.begin(), p3_vals.end()};
 
-    // the variant to visit
-    /*using ParameterVariant = std::variant<
-      Parameter<std::vector<int>>, 
-      Parameter<std::vector<std::string>>, 
-      Parameter<std::vector<float>>>;
-    using ParameterList = std::vector<ParameterVariant>;
-
-    ParameterList parameter_list = {p1, p2, p3};
-    Objective o;
-    GridSearch<ParameterList, Objective> gs{parameter_list, o};*/
-    
     Objective o;
 
-    std::cout << "p1: " << *p1.get() << std::endl;
-    std::cout << "p2: " << *p2.get() << std::endl;
-    std::cout << "p3: " << *p3.get() << std::endl;
+    int num_combinations = 1;
+    while(nextP(p1, p2, p3))
+    {
+      num_combinations+=1;
+    }
 
-    nextP(p1, p2, p3);
+    EXPECT_EQ(num_combinations, p1.steps() * p2.steps() * p3.steps());
 
-    std::cout << "p1: " << *p1.get() << std::endl;
-    std::cout << "p2: " << *p2.get() << std::endl;
-    std::cout << "p3: " << *p3.get() << std::endl;
-
-    nextP(p1, p2, p3);
-
-    std::cout << "p1: " << *p1.get() << std::endl;
-    std::cout << "p2: " << *p2.get() << std::endl;
-    std::cout << "p3: " << *p3.get() << std::endl;
-
-    GridSearchVariadic gs{o, p1, p2, p3};
+    p1.reset();
+    p2.reset();
+    p3.reset();
+    GridSearch gs{o, p1, p2, p3};
     gs.run();
-
 }
-
-/*TEST(WaffleTest, waffle_wunschapi)
-{
-    GridSearch(scoring_functor, {{{"p1", range(1.0,20.0,0.5)}}});
-}*/
 
 int main(int argc, char **argv)
 {
