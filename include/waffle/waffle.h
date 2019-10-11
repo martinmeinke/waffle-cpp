@@ -31,6 +31,7 @@ template <typename IteratorT> struct ParameterRange {
 };
 
 namespace detail {
+
 template <typename First> int numIterations(First &f) { return f.steps(); }
 
 template <typename First, typename... Rest>

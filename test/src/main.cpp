@@ -1,5 +1,3 @@
-#include <variant>
-
 #include <gtest/gtest.h>
 #include <waffle/waffle.h>
 
