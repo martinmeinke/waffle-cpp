@@ -2,8 +2,9 @@
 
 [![Build Status](https://travis-ci.com/martinmeinke/waffle-cpp.svg?token=yJWCsZhJ491sqJawCaHS&branch=master)](https://travis-ci.com/martinmeinke/waffle-cpp)
 
-Waffle is a very simple library for performing a grid search over a set of parameters.
+Waffle is a very simple c++17 library for performing grid search over a set of parameters.
 
+## Example usage
 ```cpp
 // set up some parameters and corresponding value ranges
 std::vector<int> length_vals{1, 2, 3, 4, 5};
