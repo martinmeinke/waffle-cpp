@@ -28,8 +28,6 @@ TEST(WaffleTest, basic_usage) {
   waffle::ParameterRange p_algo{"algorithm", algo_vals.begin(),
                                 algo_vals.end()};
 
-  Objective o;
-
   int num_combinations = 1;
   while (waffle::detail::nextP(p_length, p_width, p_algo)) {
     num_combinations += 1;
@@ -41,6 +39,8 @@ TEST(WaffleTest, basic_usage) {
   p_length.reset();
   p_width.reset();
   p_algo.reset();
+
+  Objective o;
   waffle::GridSearch gs{o, p_length, p_width, p_algo};
   auto params = gs.run();
 
