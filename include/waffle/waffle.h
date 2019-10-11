@@ -102,12 +102,17 @@ public:
     std::apply([](auto &... x) { detail::printParameter(x...); }, parameters_);
   }
 
+  void reset_parameters() {
+    std::apply([](auto &... x) { detail::resetP(x...); }, parameters_);
+  }
+
   int num_total_iterations() {
     return std::apply([](auto &... x) { return detail::numIterations(x...); },
                       parameters_);
   }
 
   auto run() {
+    reset_parameters();
     int iteration = 1;
     // first score is initially the best one
     auto best_score = std::apply(objective_, detail::param_values(parameters_));

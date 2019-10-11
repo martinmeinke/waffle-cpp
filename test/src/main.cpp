@@ -36,10 +36,6 @@ TEST(WaffleTest, basic_usage) {
   EXPECT_EQ(num_combinations,
             p_length.steps() * p_width.steps() * p_algo.steps());
 
-  p_length.reset();
-  p_width.reset();
-  p_algo.reset();
-
   Objective o;
   waffle::GridSearch gs{o, p_length, p_width, p_algo};
   auto params = gs.run();
