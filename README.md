@@ -15,10 +15,10 @@ waffle::ParameterRange p_width{"width", width_vals.begin(), width_vals.end()};
 
 // define scoring function
 auto target = [](int a, float b){return a * b;};
-waffle::GridSearch gs{target, p_length, p_width, p_algo;
+waffle::GridSearch gs{p_length, p_width, p_algo;
 
 // run grid search
-auto params = gs.run();
+auto params = gs.argmax(target);
 EXPECT_EQ(std::get<0>(params), 5);
 EXPECT_EQ(std::get<1>(params), 5.0);
 ```

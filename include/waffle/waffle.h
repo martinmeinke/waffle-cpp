@@ -87,12 +87,11 @@ template <typename... Args> auto param_values(std::tuple<Args...> &tup) {
 
 } // namespace detail
 
-template <typename ObjectiveFctr, typename... ParameterTs> struct GridSearch {
+template <typename... ParameterTs> struct GridSearch {
   using ParameterTuple = std::tuple<ParameterTs...>;
 
 public:
-  GridSearch(ObjectiveFctr of, ParameterTs... params)
-      : objective_(of), parameters_(params...) {
+  GridSearch(ParameterTs... params) : parameters_(params...) {
     std::cout << "GridSearch constructed using "
               << std::tuple_size<ParameterTuple>::value << " parameters"
               << std::endl;
@@ -111,18 +110,17 @@ public:
                       parameters_);
   }
 
-  auto run() {
+  template <typename ObjectiveFctr> auto argmax(ObjectiveFctr &of) {
     reset_parameters();
     int iteration = 1;
     // first score is initially the best one
-    auto best_score = std::apply(objective_, detail::param_values(parameters_));
+    auto best_score = std::apply(of, detail::param_values(parameters_));
     auto best_param_values = detail::param_values(parameters_);
 
     for (int i = 1; i < num_total_iterations(); i++) {
       std::apply([](auto &... x) { return detail::nextP(x...); }, parameters_);
       iteration = i + 1;
-      auto iteration_score =
-          std::apply(objective_, detail::param_values(parameters_));
+      auto iteration_score = std::apply(of, detail::param_values(parameters_));
       best_score = std::max(best_score, iteration_score);
       best_param_values = detail::param_values(parameters_);
     }
@@ -134,7 +132,6 @@ public:
   }
 
 private:
-  ObjectiveFctr objective_;
   ParameterTuple parameters_;
-}; // namespace waffle
+};
 } // namespace waffle

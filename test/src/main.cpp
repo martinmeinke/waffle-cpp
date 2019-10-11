@@ -37,8 +37,8 @@ TEST(WaffleTest, basic_usage) {
             p_length.steps() * p_width.steps() * p_algo.steps());
 
   Objective o;
-  waffle::GridSearch gs{o, p_length, p_width, p_algo};
-  auto params = gs.run();
+  waffle::GridSearch gs{p_length, p_width, p_algo};
+  auto params = gs.argmax(o);
 
   EXPECT_EQ(std::get<0>(params), 5);
   EXPECT_EQ(std::get<1>(params), 5.0);
