@@ -6,35 +6,49 @@
 TEST(WaffleTest, dummy) { ASSERT_EQ("waffle", waffle::waffle()); }
 
 struct Objective {
-  float operator()(int steps, std::string algo, float decay) {
-    return static_cast<float>(steps) / decay;
+  float operator()(const int length, const float width,
+                   const std::string algo) {
+    if (algo == "add") {
+      return length + width;
+    } else if (algo == "multiply") {
+      return length * width;
+    }
+
+    return 0.0;
   }
 };
 
 TEST(WaffleTest, basic_usage) {
-  std::vector<int> p1_vals{1, 2, 3};
-  waffle::ParameterRange p1{"steps", p1_vals.begin(), p1_vals.end()};
+  std::vector<int> length_vals{1, 2, 3, 4, 5};
+  waffle::ParameterRange p_length{"length", length_vals.begin(),
+                                  length_vals.end()};
 
-  std::vector<std::string> p2_vals{"algo1", "balgo"};
-  waffle::ParameterRange p2{"algorithm", p2_vals.begin(), p2_vals.end()};
+  std::vector<float> width_vals{1.0, 2.0, 3.0, 4.0, 5.0};
+  waffle::ParameterRange p_width{"width", width_vals.begin(), width_vals.end()};
 
-  std::vector<float> p3_vals{3.3, 4.4};
-  waffle::ParameterRange p3{"decay", p3_vals.begin(), p3_vals.end()};
+  std::vector<std::string> algo_vals{"add", "multiply"};
+  waffle::ParameterRange p_algo{"algorithm", algo_vals.begin(),
+                                algo_vals.end()};
 
   Objective o;
 
   int num_combinations = 1;
-  while (nextP(p1, p2, p3)) {
+  while (waffle::detail::nextP(p_length, p_width, p_algo)) {
     num_combinations += 1;
   }
 
-  EXPECT_EQ(num_combinations, p1.steps() * p2.steps() * p3.steps());
+  EXPECT_EQ(num_combinations,
+            p_length.steps() * p_width.steps() * p_algo.steps());
 
-  p1.reset();
-  p2.reset();
-  p3.reset();
-  waffle::GridSearch gs{o, p1, p2, p3};
-  gs.run();
+  p_length.reset();
+  p_width.reset();
+  p_algo.reset();
+  waffle::GridSearch gs{o, p_length, p_width, p_algo};
+  auto params = gs.run();
+
+  EXPECT_EQ(std::get<0>(params), 5);
+  EXPECT_EQ(std::get<1>(params), 5.0);
+  EXPECT_EQ(std::get<2>(params), "multiply");
 }
 
 int main(int argc, char **argv) {

@@ -30,6 +30,24 @@ template <typename IteratorT> struct ParameterRange {
   IteratorT get() { return curr_; }
 };
 
+namespace detail {
+template <typename First> int numIterations(First &f) { return f.steps(); }
+
+template <typename First, typename... Rest>
+int numIterations(First &f, Rest &... rest) {
+  return numIterations(f) * numIterations(rest...);
+}
+
+template <typename First> void printParameter(First &f) {
+  std::cout << "p: " << f.name_ << ":=" << *f.get() << std::endl;
+}
+
+template <typename First, typename... Rest>
+void printParameter(First &f, Rest &... rest) {
+  printParameter(f);
+  printParameter(rest...);
+}
+
 template <typename First> void resetP(First &f) { f.reset(); }
 
 template <typename First, typename... Rest>
@@ -66,6 +84,8 @@ template <typename... Args> auto param_values(std::tuple<Args...> &tup) {
                     tup);
 }
 
+} // namespace detail
+
 template <typename ObjectiveFctr, typename... ParameterTs> struct GridSearch {
   using ParameterTuple = std::tuple<ParameterTs...>;
 
@@ -78,29 +98,37 @@ public:
   }
 
   void print_parameter_values() {
-    std::cout << "p1: " << *std::get<0>(parameters_).get() << std::endl;
-    std::cout << "p2: " << *std::get<1>(parameters_).get() << std::endl;
-    std::cout << "p3: " << *std::get<2>(parameters_).get() << std::endl;
+    std::apply([](auto &... x) { detail::printParameter(x...); }, parameters_);
   }
 
-  void run() {
+  int num_total_iterations() {
+    return std::apply([](auto &... x) { return detail::numIterations(x...); },
+                      parameters_);
+  }
+
+  auto run() {
     int iteration = 1;
     // first score is initially the best one
-    auto best_score = std::apply(objective_, param_values(parameters_));
-    while (std::apply([](auto &... x) { return nextP(x...); }, parameters_)) {
-      iteration += 1;
-      auto iteration_score = std::apply(objective_, param_values(parameters_));
-      std::cout << "iteration: " << iteration << std::endl;
-      std::cout << "score: " << iteration_score << std::endl;
+    auto best_score = std::apply(objective_, detail::param_values(parameters_));
+    auto best_param_values = detail::param_values(parameters_);
+
+    for (int i = 1; i < num_total_iterations(); i++) {
+      std::apply([](auto &... x) { return detail::nextP(x...); }, parameters_);
+      iteration = i + 1;
+      auto iteration_score =
+          std::apply(objective_, detail::param_values(parameters_));
       best_score = std::max(best_score, iteration_score);
+      best_param_values = detail::param_values(parameters_);
     }
 
-    std::cout << "total iterations: " << iteration << std::endl;
+    std::cout << "Completed total iterations: " << iteration << std::endl;
     std::cout << "best score: " << best_score << std::endl;
+
+    return best_param_values;
   }
 
 private:
   ObjectiveFctr objective_;
   ParameterTuple parameters_;
-};
+}; // namespace waffle
 } // namespace waffle
