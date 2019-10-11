@@ -12,15 +12,14 @@ struct Objective {
 };
 
 TEST(WaffleTest, basic_usage) {
-  using namespace waffle;
   std::vector<int> p1_vals{1, 2, 3};
-  Parameter p1{"steps", p1_vals.begin(), p1_vals.end()};
+  waffle::ParameterRange p1{"steps", p1_vals.begin(), p1_vals.end()};
 
   std::vector<std::string> p2_vals{"algo1", "balgo"};
-  Parameter p2{"algorithm", p2_vals.begin(), p2_vals.end()};
+  waffle::ParameterRange p2{"algorithm", p2_vals.begin(), p2_vals.end()};
 
   std::vector<float> p3_vals{3.3, 4.4};
-  Parameter p3{"decay", p3_vals.begin(), p3_vals.end()};
+  waffle::ParameterRange p3{"decay", p3_vals.begin(), p3_vals.end()};
 
   Objective o;
 
@@ -34,7 +33,7 @@ TEST(WaffleTest, basic_usage) {
   p1.reset();
   p2.reset();
   p3.reset();
-  GridSearch gs{o, p1, p2, p3};
+  waffle::GridSearch gs{o, p1, p2, p3};
   gs.run();
 }
 

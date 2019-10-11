@@ -27,13 +27,6 @@ target_include_directories(waffle
 target_compile_features(waffle PRIVATE cxx_auto_type)
 target_compile_options(waffle PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wall>)
 
-target_link_libraries(waffle
-    # PUBLIC
-        # Boost::boost RapidJSON::RapidJSON
-    # PRIVATE
-        # Boost::regex
-)
-
 ##############################################
 # Installation instructions
 include(GNUInstallDirs)

@@ -7,14 +7,13 @@
 namespace waffle {
 std::string waffle();
 
-// random access iterator -> relax to fwd iterator at some point
-template <typename IteratorT> struct Parameter {
+template <typename IteratorT> struct ParameterRange {
   std::string name_;
-  IteratorT start_; // use lazy range?
-  IteratorT end_;   // use lazy range?
+  IteratorT start_;
+  IteratorT end_;
   IteratorT curr_;
 
-  Parameter(std::string name, IteratorT start, IteratorT end)
+  ParameterRange(std::string name, IteratorT start, IteratorT end)
       : name_(name), start_(start), end_(end), curr_(start) {}
 
   int steps() { return std::distance(start_, end_); }
