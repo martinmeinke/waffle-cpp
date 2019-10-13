@@ -16,7 +16,7 @@ waffle::ParameterRange p_width{"width", width_vals.begin(), width_vals.end()};
 
 // define scoring function
 auto target = [](int a, float b){return a * b;};
-waffle::GridSearch gs{p_length, p_width, p_algo;
+waffle::GridSearch gs{p_length, p_width};
 
 // run grid search
 auto params = gs.argmax(target);
