@@ -21,7 +21,7 @@ TEST(WaffleTest, basic_usage) {
   waffle::ParameterRange p_length{"length", length_vals.begin(),
                                   length_vals.end()};
 
-  std::vector<float> width_vals{1.0, 2.0, 3.0, 4.0, 5.0};
+  std::vector<float> width_vals{5.0, 4.0, 3.0, 2.0, 1.0};
   waffle::ParameterRange p_width{"width", width_vals.begin(), width_vals.end()};
 
   std::vector<std::string> algo_vals{"add", "multiply"};

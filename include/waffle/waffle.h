@@ -121,8 +121,10 @@ public:
       std::apply([](auto &... x) { return detail::nextP(x...); }, parameters_);
       iteration = i + 1;
       auto iteration_score = std::apply(of, detail::param_values(parameters_));
-      best_score = std::max(best_score, iteration_score);
-      best_param_values = detail::param_values(parameters_);
+      if (iteration_score > best_score) {
+        best_score = iteration_score;
+        best_param_values = detail::param_values(parameters_);
+      }
     }
 
     std::cout << "Completed total iterations: " << iteration << std::endl;
