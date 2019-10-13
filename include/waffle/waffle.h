@@ -115,7 +115,7 @@ public:
                       parameters_);
   }
 
-  template <typename ObjectiveFctr> auto argmax(ObjectiveFctr &of) {
+  template <typename ObjectiveFctr> auto argmax(ObjectiveFctr &&of) {
     reset_parameters();
     int iteration = 1;
     // first score is initially the best one
