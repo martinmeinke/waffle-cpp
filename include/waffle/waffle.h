@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <tuple>
+#include <stdexcept>
 
 namespace waffle {
 std::string waffle();
@@ -14,7 +15,11 @@ template <typename IteratorT> struct ParameterRange {
   IteratorT curr_;
 
   ParameterRange(std::string name, IteratorT start, IteratorT end)
-      : name_(name), start_(start), end_(end), curr_(start) {}
+      : name_(name), start_(start), end_(end), curr_(start) {
+    if (steps() == 0) {
+      throw std::invalid_argument("Parameter range must not be empty");
+    }
+  }
 
   int steps() { return std::distance(start_, end_); }
 
