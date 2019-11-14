@@ -45,6 +45,32 @@ TEST(WaffleTest, basic_usage) {
   EXPECT_EQ(std::get<2>(params), "multiply");
 }
 
+template <typename ScalarT>
+std::vector<ScalarT> linrange(ScalarT start, ScalarT end, ScalarT step = 1.0) {
+  std::vector<ScalarT> values;
+  ScalarT current = start;
+  while (current < end) {
+    values.push_back(current);
+    current += step;
+  }
+  return values;
+}
+
+TEST(WaffleTest, accepts_lambda_function) {
+  auto xs = linrange(-3.0, 3.0, 0.1);
+  auto ys = linrange(-3.0, 3.0, 0.1);
+  waffle::ParameterRange px{"x", xs.begin(), xs.end()};
+  waffle::ParameterRange py{"y", ys.begin(), ys.end()};
+
+  waffle::GridSearch gs{px, py};
+  auto params = gs.argmax([](float x, float y) {
+      return - (x - 0.7) * (x - 0.7) - (y - 0.5) * (y - 0.5);
+  });
+
+  EXPECT_FLOAT_EQ(std::get<0>(params), 0.7);
+  EXPECT_FLOAT_EQ(std::get<1>(params), 0.5);
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
